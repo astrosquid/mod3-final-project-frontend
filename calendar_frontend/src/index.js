@@ -3,7 +3,6 @@ let events = []
 document.addEventListener('DOMContentLoaded', () => {
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
-
   // make a date object for the current date
   // get the first day of the month
   // get the last day of the month
@@ -129,14 +128,6 @@ function openDetailView(tdElement) {
 function makeDetailViewHTML() {
   const div = document.createElement('div')
   const list = document.createElement('ul')
-  const item1 = document.createElement('li')
-  item1.innerText = 'Project'
-
-  const item2 = document.createElement('li')
-  item2.innerText = 'TO DO'
-
-  list.appendChild(item1)
-  list.appendChild(item2)
 
   const newTaskBtn = document.createElement('button')
   newTaskBtn.innerText = 'New Event'
@@ -157,6 +148,8 @@ function makeDetailViewHTML() {
 }
 
 function setNewListener(div, newTaskBtn) {
+  const list = document.createElement('ul')
+
   newTaskBtn.addEventListener('click', (e) => {
     const form = document.createElement('form')
     const title = document.createElement('input')
@@ -198,6 +191,10 @@ function setNewListener(div, newTaskBtn) {
       })
       .then(res => res.json())
       .then(json => {console.log(json)})
+      .then(function() {let listItem = document.createElement("li")
+          listItem.innerHTML = title.value
+          div.appendChild(listItem)
+        })
     })
   })
 }
