@@ -33,6 +33,8 @@ function setDateListeners() {
   const table = document.querySelector('table')
   table.addEventListener('click', (event) => {
     if (event.target && event.target.tagName === 'TD') {
+      const div = document.getElementById('date-detail-container')
+      div.innerHTML = ``
       openDetailView(event.target)
     }
   })
@@ -41,9 +43,7 @@ function setDateListeners() {
 function openDetailView(tdElement) {
   const div = document.getElementById('date-detail-container')
   div.appendChild(document.createElement('hr'))
-
   const detailHTML = makeDetailViewHTML()
-
   div.appendChild(detailHTML)
 }
 
@@ -60,11 +60,11 @@ function makeDetailViewHTML() {
   list.appendChild(item2)
 
   const newTaskBtn = document.createElement('button')
-  newTaskBtn.innerText = 'New'
+  newTaskBtn.innerText = 'New Event'
   setNewListener(div, newTaskBtn)
 
   const backButton = document.createElement('button')
-  backButton.innerText = 'Return'
+  backButton.innerText = 'Cancel'
   backButton.addEventListener('click', (e) => {
     document.getElementById('date-detail-container').innerHTML = ''
   })
