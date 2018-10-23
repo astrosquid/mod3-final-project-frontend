@@ -13,7 +13,7 @@ input {
 div#custom-cal {
   display: flex;
   flex-wrap: wrap;
-  width: 800px;
+  /* width: 800px; */
   align-items: center;
   flex-direction: row;
   margin: auto;
@@ -33,4 +33,19 @@ div.day-of-week {
   border: none;
   padding-left: 2px;
   justify-content: center;
+}
+
+div.date:hover {
+  background-color: grey;
+  transition: all .2s ease-in;
+}
+
+div.date-num {
+  background-color: red;
+  color: white;
+  border-radius: 15%;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  text-align: center;
 }
