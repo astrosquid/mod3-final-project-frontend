@@ -1,3 +1,14 @@
+div#cal-controls {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.control-flex {
+
+}
+
 div#custom-cal {
   display: flex;
   flex-wrap: wrap;
@@ -21,7 +32,7 @@ div.day-of-week {
   border: none;
   padding-left: 2px;
   justify-content: center;
-  font-size: 2em
+  font-size: 1.5em
 }
 
 div.date:hover {

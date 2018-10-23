@@ -1,18 +1,45 @@
 let calendarDates = []
 let events = []
 
+let calDate = new Date()
+
 document.addEventListener('DOMContentLoaded', () => {
   downloadCalendarDates()
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
-  // make a date object for the current date
-  // get the first day of the month
-  // get the last day of the month
-  // loop through from the first day of the month to the last
+  initCalendar()
+  setListenerOnMonthBtns()
+})
+
+function setListenerOnMonthBtns() {
+  const prevMonthBtn = document.getElementById('prev-month')
+  const nextMonthBtn = document.getElementById('next-month')
+
+  prevMonthBtn.addEventListener('click', (e) => {
+    calDate.setMonth(calDate.getMonth() - 1)
+    initCalendar()
+  })
+
+  nextMonthBtn.addEventListener('click', (e) => {
+    calDate.setMonth(calDate.getMonth() + 1)
+    initCalendar()
+  })
+}
+
+function initCalendar() {
+  document.getElementById('month-label').innerText = `${getMonthByNum(calDate.getMonth())}, ${calDate.getFullYear()}`
+  removeDateNums()
   resetCalendarAttributes()
   populateCalendarWithDays()
-  setListenerOnCustomerCal()
-})
+  setListenerOnCustomCal()
+}
+
+function removeDateNums() {
+  const dateNums = document.querySelectorAll('.date-num')
+  dateNums.forEach( (dateNum) => {
+    dateNum.remove()
+  })
+}
 
 function downloadCalendarDates() {
   fetch('http://localhost:3000/api/v1/calendar_dates')
@@ -24,7 +51,7 @@ function downloadCalendarDates() {
   })
 }
 
-function setListenerOnCustomerCal() {
+function setListenerOnCustomCal() {
   const cal = document.getElementById('custom-cal')
   cal.addEventListener('click', (event) => {
     if (event.target && event.target.getAttribute('date-square') === 'true') {
@@ -44,9 +71,8 @@ function resetCalendarAttributes() {
 }
 
 function populateCalendarWithDays() {
-  const today = new Date()
-  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1) // between 0 and 6
-  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+  const firstDay = new Date(calDate.getFullYear(), calDate.getMonth(), 1) // between 0 and 6
+  const lastDay = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 0)
   let currentDate = firstDay.getDate()
   const dates = document.querySelectorAll('.date')
   let foundFirstDayOfMonth = false
@@ -62,8 +88,10 @@ function populateCalendarWithDays() {
       const span = document.createElement('span')
       span.innerText = currentDate
       numDiv.appendChild(span)
+      date.className += ' date'
       date.appendChild(numDiv)
       date.setAttribute('date-square', 'true')
+      date.setAttribute('style', 'background: lightgrey')
       currentDate += 1
     } else {
       date.setAttribute('style', 'background-color: white;')
@@ -90,6 +118,35 @@ function getWeekdayFromNumber(attributeNumber) {
   }
 }
 
+function getMonthByNum(monthNum) {
+  switch (monthNum) {
+    case 0:
+      return 'January'
+    case 1:
+      return 'February'
+    case 2:
+      return 'March'
+    case 3:
+      return 'April'
+    case 4:
+      return 'May'
+    case 5:
+      return 'June'
+    case 6:
+      return 'July'
+    case 7:
+      return 'August'
+    case 8:
+      return 'September'
+    case 9:
+      return 'October'
+    case 10:
+      return 'November'
+    case 11:
+      return 'December'
+  }
+}
+
 function setWeekdaysOnCalendar() {
   const cal = document.getElementById('custom-cal')
   const dates = document.querySelectorAll('.date')
@@ -109,12 +166,6 @@ function downloadCalendarEvents() {
     return response.json()
   })
   .then( (json) => {
-    console.log(json)
-    // it works.
-    // from here:
-    // parse JSON of events (maybe use an
-    // event class)
-    // all dates that events with the ones we pulled down from the server.
     createLocalEvents(json)
   })
 }
