@@ -175,9 +175,9 @@ function setNewListener(div, newTaskBtn) {
     const location = document.createElement('input')
     location.setAttribute('placeholder', 'Location...')
     const startDate = document.createElement('input')
-    startDate.setAttribute('type', 'date')
+    startDate.setAttribute('type', 'datetime-local')
     const endDate = document.createElement('input')
-    endDate.setAttribute('type', 'date')
+    endDate.setAttribute('type', 'datetime-local')
     const submitButton = document.createElement('input')
     submitButton.setAttribute("type", "submit")
     form.appendChild(title)
@@ -223,6 +223,12 @@ class CalendarDate {
     this.date = new Date(dateJSON.date)
     calendarDates.push(this)
   }
+
+  static findById(id) {
+    return calendarDates.filter( (calDate) => {
+      return calDate.id === id
+    })[0]
+  }
 }
 
 class Event {
@@ -230,7 +236,7 @@ class Event {
     this.id = eventJSON.id
     this.title = eventJSON.title
     this.location = eventJSON.location
-    this.startDate = new Date(eventJSON.start_date)
+    this.startDate = CalendarDate.findById(eventJSON.calendar_date_id)
     this.endDate = new Date(eventJSON.end_date)
     events.push(this)
   }
