@@ -45,7 +45,13 @@ function populateCalendarWithDays() {
     }
 
     if (foundFirstDayOfMonth && currentDate <= lastDay.getDate()) {
-      date.innerText = currentDate
+      const numDiv = document.createElement('div')
+      numDiv.setAttribute('date-num', currentDate)
+      numDiv.className = 'date-num'
+      const span = document.createElement('span')
+      span.innerText = currentDate
+      numDiv.appendChild(span)
+      date.appendChild(numDiv)
       date.setAttribute('date-square', 'true')
       currentDate += 1
     } else {
