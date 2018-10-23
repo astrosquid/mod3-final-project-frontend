@@ -1,9 +1,6 @@
 let events = []
 
 document.addEventListener('DOMContentLoaded', () => {
-  let element = document.getElementById("my-calendar");
-  jsCalendar.new(element);
-  setDateListeners()
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
 
