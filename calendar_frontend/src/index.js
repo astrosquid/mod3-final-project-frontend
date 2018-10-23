@@ -1,6 +1,8 @@
+let calendarDates = []
 let events = []
 
 document.addEventListener('DOMContentLoaded', () => {
+  downloadCalendarDates()
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
   // make a date object for the current date
@@ -11,6 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
   populateCalendarWithDays()
   setListenerOnCustomerCal()
 })
+
+function downloadCalendarDates() {
+  fetch('http://localhost:3000/api/v1/calendar_dates')
+  .then( response => response.json())
+  .then( json => {
+    json.forEach(dateJSON => {
+      new CalendarDate(dateJSON)
+    })
+  })
+}
 
 function setListenerOnCustomerCal() {
   const cal = document.getElementById('custom-cal')
@@ -109,7 +121,7 @@ function downloadCalendarEvents() {
 
 function createLocalEvents(eventJSONCollection) {
   eventJSONCollection.forEach( (eventJSON) => {
-    events.push(new Event(eventJSON))
+    new Event(eventJSON)
   })
 }
 
@@ -205,23 +217,13 @@ function setNewListener(div, newTaskBtn) {
   })
 }
 
-// function sendEventToDatabase() {
-//   fetch('http://localhost:3000/api/v1/events', {
-//     method: "POST",
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json'
-//     },
-//     body: JSON.stringify({
-//       title: title.value,
-//       location: location.value,
-//       starDAte: startDate.value,
-//       endDate: endDate.value
-//     })
-//   })
-// }
-
-
+class CalendarDate {
+  constructor(dateJSON) {
+    this.id = dateJSON.id
+    this.date = new Date(dateJSON.date)
+    calendarDates.push(this)
+  }
+}
 
 class Event {
   constructor(eventJSON) {
@@ -230,5 +232,6 @@ class Event {
     this.location = eventJSON.location
     this.startDate = new Date(eventJSON.start_date)
     this.endDate = new Date(eventJSON.end_date)
+    events.push(this)
   }
 }
