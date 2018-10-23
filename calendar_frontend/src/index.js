@@ -6,14 +6,78 @@ document.addEventListener('DOMContentLoaded', () => {
   setDateListeners()
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
+
+  // make a date object for the current date
+  // get the first day of the month
+  // get the last day of the month
+  // loop through from the first day of the month to the last
+  resetCalendarAttributes()
+  populateCalendarWithDays()
+  setListenerOnCustomerCal()
 })
+
+function setListenerOnCustomerCal() {
+  const cal = document.getElementById('custom-cal')
+  cal.addEventListener('click', (event) => {
+    if (event.target && event.target.getAttribute('date-square') === 'true') {
+      console.log('found a square')
+    }
+  })
+}
+
+function resetCalendarAttributes() {
+  const dates = document.querySelectorAll('.date')
+  dates.forEach( (date) => {
+    date.removeAttribute('date-square')
+  })
+}
+
+function populateCalendarWithDays() {
+  const today = new Date()
+  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1) // between 0 and 6
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+  let currentDate = firstDay.getDate()
+  const dates = document.querySelectorAll('.date')
+  let foundFirstDayOfMonth = false
+  dates.forEach( (date) => {
+    if (parseInt(date.getAttribute('data-weekday')) === firstDay.getDay()) {
+      foundFirstDayOfMonth = true
+    }
+
+    if (foundFirstDayOfMonth && currentDate <= lastDay.getDate()) {
+      date.innerText = currentDate
+      date.setAttribute('date-square', 'true')
+      currentDate += 1
+    } else {
+      date.setAttribute('style', 'background-color: white;')
+    }
+  })
+}
+
+function getWeekdayFromNumber(attributeNumber) {
+  switch (attributeNumber) {
+    case 0:
+      return 'Sunday'
+    case 1:
+      return 'Monday'
+    case 2:
+      return 'Tuesday'
+    case 3:
+      return 'Wednesday'
+    case 4:
+      return 'Thursday'
+    case 5:
+      return 'Friday'
+    case 6:
+      return 'Saturday'
+  }
+}
 
 function setWeekdaysOnCalendar() {
   const cal = document.getElementById('custom-cal')
   const dates = document.querySelectorAll('.date')
   let currentWeekday = 1
   dates.forEach( (date) => {
-    debugger
     if (!(currentWeekday - 7 < 1)) {
       currentWeekday -= 7
     }
