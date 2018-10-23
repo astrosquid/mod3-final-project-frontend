@@ -9,3 +9,28 @@ table {
 input {
   margin: auto;
 }
+
+div#custom-cal {
+  display: flex;
+  flex-wrap: wrap;
+  width: 800px;
+  align-items: center;
+  flex-direction: row;
+  margin: auto;
+}
+
+div.col {
+  width: 14%;
+  height: 100px;
+  background-color: lightgrey;
+  border: 1px dashed white;
+}
+
+div.day-of-week {
+  height: auto;
+  color: white;
+  background-color: grey;
+  border: none;
+  padding-left: 2px;
+  justify-content: center;
+}

@@ -5,7 +5,22 @@ document.addEventListener('DOMContentLoaded', () => {
   jsCalendar.new(element);
   setDateListeners()
   downloadCalendarEvents()
+  setWeekdaysOnCalendar()
 })
+
+function setWeekdaysOnCalendar() {
+  const cal = document.getElementById('custom-cal')
+  const dates = document.querySelectorAll('.date')
+  let currentWeekday = 1
+  dates.forEach( (date) => {
+    debugger
+    if (!(currentWeekday - 7 < 1)) {
+      currentWeekday -= 7
+    }
+    date.setAttribute('data-weekday', currentWeekday-1)
+    currentWeekday += 1
+  })
+}
 
 function downloadCalendarEvents() {
   fetch('http://localhost:3000/api/v1/events')
