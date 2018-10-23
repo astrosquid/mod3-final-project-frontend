@@ -1,26 +1,15 @@
-#my-calendar {
-  margin-left: auto;
-}
-
-table {
-  margin: auto !important;
-}
-
-input {
-  margin: auto;
-}
-
 div#custom-cal {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   flex-direction: row;
   margin: auto;
+  padding-left: 15px;
 }
 
 div.col {
   width: 14%;
-  height: 100px;
+  height: 125px;
   background-color: lightgrey;
   border: 1px dashed white;
 }
@@ -43,7 +32,7 @@ div.date:hover {
 div.date-num {
   background-color: red;
   color: white;
-  border-radius: 20%;
+  border-radius: 25%;
   display: inline-block;
   width: 20px;
   height: 20px;
