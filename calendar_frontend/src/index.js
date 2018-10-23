@@ -88,7 +88,7 @@ function populateCalendarWithDays() {
       const span = document.createElement('span')
       span.innerText = currentDate
       numDiv.appendChild(span)
-      date.className += ' date'
+      date.className = 'col date'
       date.appendChild(numDiv)
       date.setAttribute('date-square', 'true')
       date.setAttribute('style', 'background: lightgrey')
