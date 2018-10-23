@@ -21,6 +21,9 @@ function setListenerOnCustomerCal() {
   cal.addEventListener('click', (event) => {
     if (event.target && event.target.getAttribute('date-square') === 'true') {
       console.log('found a square')
+      const dateDetailContainer = document.getElementById("date-detail-container")
+      dateDetailContainer.innerHTML = ''
+      openDetailView(event.target)
     }
   })
 }
@@ -167,6 +170,8 @@ function setNewListener(div, newTaskBtn) {
     startDate.setAttribute('type', 'date')
     const endDate = document.createElement('input')
     endDate.setAttribute('type', 'date')
+    const submitButton = document.createElement('input')
+    submitButton.setAttribute("type", "submit")
     form.appendChild(title)
     form.appendChild(document.createElement('br'))
     form.appendChild(location)
@@ -176,9 +181,46 @@ function setNewListener(div, newTaskBtn) {
     form.appendChild(endDate)
     form.appendChild(document.createElement('br'))
     startDate.value = new Date()
+    form.appendChild(submitButton)
     div.appendChild(form)
+
+    form.addEventListener('submit', (e) => {
+      event.preventDefault()
+      fetch('http://localhost:3000/api/v1/events', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          title: title.value,
+          location: location.value,
+          start_date: startDate.value,
+          end_date: endDate.value
+        })
+      })
+      .then(res => res.json())
+      .then(json => {console.log(json)})
+    })
   })
 }
+
+// function sendEventToDatabase() {
+//   fetch('http://localhost:3000/api/v1/events', {
+//     method: "POST",
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Accept': 'application/json'
+//     },
+//     body: JSON.stringify({
+//       title: title.value,
+//       location: location.value,
+//       starDAte: startDate.value,
+//       endDate: endDate.value
+//     })
+//   })
+// }
+
 
 
 class Event {
