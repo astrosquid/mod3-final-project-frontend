@@ -96,8 +96,8 @@ function populateCalendarWithDays() {
       const numDiv = document.createElement('div')
       numDiv.setAttribute('date-num', currentDate)
       numDiv.className = 'date-num'
-      const color = makeRandomColor()
-      numDiv.style.backgroundColor = color
+      // const color = makeRandomColor()
+      // numDiv.style.backgroundColor = color
       const span = document.createElement('span')
       span.innerText = currentDate
       numDiv.appendChild(span)

@@ -11,27 +11,19 @@
   </head>
 
   <body>
-    <div id="titlebar">
-      Cal-Events!
-    </div>
-    <!-- <div id="text-container">
-      <form action="">
-        <input type="text" placeholder="Aa..."></input>
-      </form>
-    </div> -->
     <div id="date-detail-container">
 
     </div>
     <!-- <hr> -->
     <div id="cal-controls">
-      <div class="control-flex">
-        <button id="prev-month" class="control-flex">Prev Month</button>
+      <div class="cal-control nextBtnCont">
+        <button id="prev-month" class="change-month" >⇠</button>
       </div>
-      <div class="control-flex">
-        <h2 id="month-label" class="control-flex"></h2>
+      <div class="cal-control" id="month-label-container">
+        <h2 id="month-label"></h2>
       </div>
-      <div class="control-flex">
-        <button id="next-month" class="control-flex">Next Month</button>
+      <div class="cal-control prevBtnCont">
+        <button id="next-month" class="change-month">⇢</button>
       </div>
     </div>
     <div id="custom-cal">
