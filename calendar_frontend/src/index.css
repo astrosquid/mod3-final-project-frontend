@@ -115,4 +115,5 @@ div.date-num {
 
 .clicked {
   animation: color_change 0.7s infinite alternate;
+  height: 0px;
 }

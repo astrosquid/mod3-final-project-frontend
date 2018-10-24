@@ -96,25 +96,15 @@ function populateCalendarWithDays() {
       const numDiv = document.createElement('div')
       numDiv.setAttribute('date-num', currentDate)
       numDiv.className = 'date-num'
-      // const color = makeRandomColor()
-      // numDiv.style.backgroundColor = color
       const span = document.createElement('span')
       span.innerText = currentDate
       numDiv.appendChild(span)
       date.className = 'col date in-month'
       date.appendChild(numDiv)
       date.setAttribute('date-square', 'true')
-      // date.setAttribute('style', 'background-color: lightgrey')
       currentDate += 1
     }
   })
-}
-
-function makeRandomColor() {
-  const hue = Math.floor(Math.random() * Math.floor(359))
-  const sat = Math.floor(Math.random() * Math.floor(40)) + 40
-  const lit = 40
-  return `hsl(${hue},${sat}%,${lit}%)`
 }
 
 function getWeekdayFromNumber(attributeNumber) {
@@ -206,13 +196,13 @@ function setDateListeners() {
 }
 
 function openDetailView(target) {
-  //const div = document.getElementById('date-detail-container')
+  const div = document.getElementById('date-detail-container')
 
-  const bottomDiv = document.getElementById('new-div')
+  // const bottomDiv = document.getElementById('new-div')
 
   const detailHTML = makeDetailViewHTML(target)
-  bottomDiv.appendChild(detailHTML)
-  bottomDiv.appendChild(document.createElement('hr'))
+  div.appendChild(detailHTML)
+  div.appendChild(document.createElement('hr'))
 }
 
 function makeDetailViewHTML(target) {
