@@ -41,7 +41,7 @@ div.date:hover {
 }
 
 div.date-num {
-  background-color: red;
+  /* background-color: red; */
   color: white;
   border-radius: 25%;
   display: inline-block;

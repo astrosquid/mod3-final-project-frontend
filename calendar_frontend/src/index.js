@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
   initCalendar()
+  setListenerOnCustomCal()
   setListenerOnMonthBtns()
 })
 
@@ -31,7 +32,6 @@ function initCalendar() {
   removeDateNums()
   resetCalendarAttributes()
   populateCalendarWithDays()
-  setListenerOnCustomCal()
 }
 
 function removeDateNums() {
@@ -85,6 +85,8 @@ function populateCalendarWithDays() {
       const numDiv = document.createElement('div')
       numDiv.setAttribute('date-num', currentDate)
       numDiv.className = 'date-num'
+      const color = makeRandomColor()
+      numDiv.style.backgroundColor = color
       const span = document.createElement('span')
       span.innerText = currentDate
       numDiv.appendChild(span)
@@ -97,6 +99,13 @@ function populateCalendarWithDays() {
       date.setAttribute('style', 'background-color: white;')
     }
   })
+}
+
+function makeRandomColor() {
+  const hue = Math.floor(Math.random() * Math.floor(359))
+  const sat = Math.floor(Math.random() * Math.floor(40)) + 40
+  const lit = 40
+  return `hsl(${hue},${sat}%,${lit}%)`
 }
 
 function getWeekdayFromNumber(attributeNumber) {
