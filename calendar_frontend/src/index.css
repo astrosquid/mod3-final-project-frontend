@@ -4,6 +4,18 @@
   --october-lit: 60%;
 }
 
+div#titlebar {
+  /* background-color: black; */
+  font-size: 5em;
+  font-family: 'Lobster', cursive;
+  text-align: center;
+}
+
+#month-label {
+  font-size: 2em;
+  font-family: 'Lobster', cursive;
+}
+
 div#cal-controls {
   width: 100%;
   display: flex;
@@ -33,7 +45,8 @@ div.day-of-week {
   border: none;
   padding-left: 2px;
   justify-content: center;
-  font-size: 1.5em
+  font-size: 1.5em;
+  font-family: 'Lobster', cursive;
 }
 
 div.date {
