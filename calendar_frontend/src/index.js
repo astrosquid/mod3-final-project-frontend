@@ -166,6 +166,8 @@ function setNewListener(div, newTaskBtn) {
     startDate.setAttribute('type', 'date')
     const endDate = document.createElement('input')
     endDate.setAttribute('type', 'date')
+    const calendarDateInput = document.createElement('input')
+    calendarDateInput.setAttribute('placeholder', 'calendar_date_id')
     const submitButton = document.createElement('input')
     submitButton.setAttribute("type", "submit")
     form.appendChild(title)
@@ -176,13 +178,15 @@ function setNewListener(div, newTaskBtn) {
     form.appendChild(document.createElement('br'))
     form.appendChild(endDate)
     form.appendChild(document.createElement('br'))
+    form.appendChild(calendarDateInput)
+    form.appendChild(document.createElement('br'))
     startDate.value = new Date()
     form.appendChild(submitButton)
     div.appendChild(form)
 
     form.addEventListener('submit', (e) => {
       event.preventDefault()
-      fetch('http://localhost:3000/api/v1/events', {
+      fetch('http://localhost:3000/api/v1/calendar_dates/', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -192,34 +196,20 @@ function setNewListener(div, newTaskBtn) {
           title: title.value,
           location: location.value,
           start_date: startDate.value,
-          end_date: endDate.value
+          end_date: endDate.value,
+          calendar_date_id: calendarDateInput.value
         })
       })
       .then(res => res.json())
       .then(json => {console.log(json)})
-      .then(function() {let listItem = document.createElement("li")
+      .then(function() {
+          let listItem = document.createElement("li")
           listItem.innerHTML = title.value
           div.appendChild(listItem)
-        })
+      })
     })
   })
 }
-
-// function sendEventToDatabase() {
-//   fetch('http://localhost:3000/api/v1/events', {
-//     method: "POST",
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json'
-//     },
-//     body: JSON.stringify({
-//       title: title.value,
-//       location: location.value,
-//       starDAte: startDate.value,
-//       endDate: endDate.value
-//     })
-//   })
-// }
 
 
 
