@@ -47,6 +47,8 @@ function downloadCalendarDates() {
   fetch('http://localhost:3000/api/v1/calendar_dates')
   .then( response => response.json())
   .then( json => {
+    console.log('%c CalDates from server:', 'color: yellow')
+    console.log(json)
     json.forEach(dateJSON => {
       new CalendarDate(dateJSON)
     })
@@ -197,12 +199,22 @@ function setDateListeners() {
 
 function openDetailView(target) {
   const div = document.getElementById('date-detail-container')
-
-  // const bottomDiv = document.getElementById('new-div')
-
+  const date = getDateFromElement(target)
   const detailHTML = makeDetailViewHTML(target)
   div.appendChild(detailHTML)
   div.appendChild(document.createElement('hr'))
+}
+
+function getDateFromElement(target) {
+  const day = parseInt(target.querySelector('span').innerText)
+  const month = calDate.getMonth()
+  const year = calDate.getFullYear()
+  const date = new Date(year, month, day)
+  const calendarDate = CalendarDate.findByDate(date)
+  debugger
+  const dateEvents = Event.getEventsByCalDate(calendarDate)
+  debugger
+  // go make HTML cards for these events.
 }
 
 function makeDetailViewHTML(target) {
@@ -305,13 +317,29 @@ function setNewListener(div, newTaskBtn, target) {
 class CalendarDate {
   constructor(dateJSON) {
     this.id = dateJSON.id
-    this.date = new Date(dateJSON.date)
+    const splitDate = dateJSON.date.split('-')
+    const year = splitDate[0]
+    const date = splitDate[2]
+    const month = parseInt(splitDate[1]) - 1
+    this.date = new Date(year, month, date)
     calendarDates.push(this)
+    return this
   }
 
   static findById(id) {
     return calendarDates.filter( (calDate) => {
       return calDate.id === id
+    })[0]
+  }
+
+  static findByDate(date) {
+    return calendarDates.filter( (calDate) => {
+      debugger
+      if (calDate.date.getFullYear() === date.getFullYear() &&
+        calDate.date.getMonth() === date.getMonth() &&
+        calDate.date.getDate() === date.getDate()) {
+          return calDate
+        }
     })[0]
   }
 }
@@ -321,8 +349,16 @@ class Event {
     this.id = eventJSON.id
     this.title = eventJSON.title
     this.location = eventJSON.location
-    this.startDate = CalendarDate.findById(eventJSON.calendar_date_id)
-    this.endDate = new Date(eventJSON.end_date)
+    this.calendarDateId = eventJSON.calendar_date_id
+    this.calendarDate = CalendarDate.findById(this.calendarDateId)
     events.push(this)
+    return this
+  }
+
+  static getEventsByCalDate(calDate) {
+    return events.filter( (event) => {
+      debugger
+      return event.calendarDateId === calDate.id
+    })
   }
 }
