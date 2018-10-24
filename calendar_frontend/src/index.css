@@ -1,7 +1,18 @@
 :root {
   --october-hue: 30;
   --october-sat: 100%;
-  --october-lit: 60%;
+  --october-lit: 85%;
+}
+
+div#titlebar {
+  font-size: 5em;
+  font-family: 'Lobster', cursive;
+  text-align: center;
+}
+
+#month-label {
+  font-size: 2em;
+  font-family: 'Lobster', cursive;
 }
 
 div#cal-controls {
@@ -23,7 +34,6 @@ div#custom-cal {
 div.col {
   width: 14%;
   height: 125px;
-  /* background-color: lightgrey; */
 }
 
 div.day-of-week {
@@ -33,7 +43,8 @@ div.day-of-week {
   border: none;
   padding-left: 2px;
   justify-content: center;
-  font-size: 1.5em
+  font-size: 1.5em;
+  font-family: 'Lobster', cursive;
 }
 
 div.date {
@@ -48,11 +59,6 @@ div.in-month {
 @keyframes color_change {
   from {background-color: lightgrey;}
   to {background-color: #4d4d4d;}
-}
-
-div.in-month.clicked {
-  animation: color_change 1s infinite alternate;
-  border-radius: 0%;
 }
 
 div.in-month:hover {
@@ -70,10 +76,22 @@ div.date-num {
   text-align: center;
 }
 
+/* Month-specific animations. */
+
 div#custom-cal.October div.in-month {
   background-color: hsl(var(--october-hue), var(--october-sat), var(--october-lit));
 }
 
 div#custom-cal.October div.in-month:hover {
   background-color: hsl(calc(var(--october-hue) - 6), var(--october-sat), 50%);
+}
+
+div#custom-cal.October div.in-month.clicked {
+  border-radius: 0%;
+  animation: oct_color_change .7s infinite alternate;
+}
+
+@keyframes oct_color_change {
+  from {background-color: hsl(var(--october-hue)), var(--october-sat), var(--october-lit); };
+  to {background-color: hsl(var(--october-hue)), var(--october-sat), 0;};
 }
