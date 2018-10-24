@@ -29,6 +29,8 @@ function setListenerOnMonthBtns() {
 
 function initCalendar() {
   document.getElementById('month-label').innerText = `${getMonthByNum(calDate.getMonth())}, ${calDate.getFullYear()}`
+  const cal = document.getElementById('custom-cal')
+  cal.className = getMonthByNum(calDate.getMonth())
   removeDateNums()
   resetCalendarAttributes()
   populateCalendarWithDays()
@@ -51,11 +53,19 @@ function downloadCalendarDates() {
   })
 }
 
+function clearClickedFromDates() {
+  const dates = document.querySelectorAll('.in-month')
+  dates.forEach( (date) => {
+    date.className = 'col date in-month'
+  })
+}
+
 function setListenerOnCustomCal() {
   const cal = document.getElementById('custom-cal')
   cal.addEventListener('click', (event) => {
     if (event.target && event.target.getAttribute('date-square') === 'true') {
-      console.log('found a square')
+      clearClickedFromDates()
+      event.target.className += ' clicked'
       const dateDetailContainer = document.getElementById("date-detail-container")
       dateDetailContainer.innerHTML = ''
       openDetailView(event.target)
@@ -67,6 +77,7 @@ function resetCalendarAttributes() {
   const dates = document.querySelectorAll('.date')
   dates.forEach( (date) => {
     date.removeAttribute('date-square')
+    date.className = 'col date'
   })
 }
 
@@ -90,13 +101,11 @@ function populateCalendarWithDays() {
       const span = document.createElement('span')
       span.innerText = currentDate
       numDiv.appendChild(span)
-      date.className = 'col date'
+      date.className = 'col date in-month'
       date.appendChild(numDiv)
       date.setAttribute('date-square', 'true')
-      date.setAttribute('style', 'background: lightgrey')
+      // date.setAttribute('style', 'background-color: lightgrey')
       currentDate += 1
-    } else {
-      date.setAttribute('style', 'background-color: white;')
     }
   })
 }
@@ -196,20 +205,20 @@ function setDateListeners() {
   })
 }
 
-function openDetailView(tdElement) {
+function openDetailView(target) {
   const div = document.getElementById('date-detail-container')
-  div.appendChild(document.createElement('hr'))
-  const detailHTML = makeDetailViewHTML()
+  const detailHTML = makeDetailViewHTML(target)
   div.appendChild(detailHTML)
+  div.appendChild(document.createElement('hr'))
 }
 
-function makeDetailViewHTML() {
+function makeDetailViewHTML(target) {
   const div = document.createElement('div')
   const list = document.createElement('ul')
 
   const newTaskBtn = document.createElement('button')
   newTaskBtn.innerText = 'New Event'
-  setNewListener(div, newTaskBtn)
+  setNewListener(div, newTaskBtn, target)
 
   const backButton = document.createElement('button')
   backButton.innerText = 'Cancel'
@@ -225,19 +234,24 @@ function makeDetailViewHTML() {
   return div
 }
 
-function setNewListener(div, newTaskBtn) {
+function setNewListener(div, newTaskBtn, target) {
   const list = document.createElement('ul')
+
+  const date = target.querySelector('span').innerText
 
   newTaskBtn.addEventListener('click', (e) => {
     const form = document.createElement('form')
+    form.setAttribute('date', date)
+    form.setAttribute('month', calDate.getMonth())
+    form.setAttribute('year', calDate.getFullYear())
     const title = document.createElement('input')
     title.setAttribute('placeholder', 'Title...')
     const location = document.createElement('input')
     location.setAttribute('placeholder', 'Location...')
     const startDate = document.createElement('input')
-    startDate.setAttribute('type', 'datetime-local')
+    startDate.setAttribute('type', 'date')
     const endDate = document.createElement('input')
-    endDate.setAttribute('type', 'datetime-local')
+    endDate.setAttribute('type', 'date')
     const submitButton = document.createElement('input')
     submitButton.setAttribute("type", "submit")
     form.appendChild(title)
@@ -254,6 +268,8 @@ function setNewListener(div, newTaskBtn) {
 
     form.addEventListener('submit', (e) => {
       event.preventDefault()
+      const data = getDataFromForm(form)
+      submitDate(data)
       fetch('http://localhost:3000/api/v1/events', {
         method: "POST",
         headers: {
@@ -261,20 +277,66 @@ function setNewListener(div, newTaskBtn) {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          title: title.value,
-          location: location.value,
-          start_date: startDate.value,
-          end_date: endDate.value
+          title: data.title,
+          location: data.location,
+          start_date: data.startDate,
+          end_date: data.endDate
         })
       })
       .then(res => res.json())
       .then(json => {console.log(json)})
-      .then(function() {let listItem = document.createElement("li")
-          listItem.innerHTML = title.value
-          div.appendChild(listItem)
-        })
+      .then(function() {
+        let listItem = document.createElement("li")
+        listItem.innerHTML = title.value
+        div.appendChild(listItem)
+      })
     })
   })
+}
+
+function submitDate(dataJSON) {
+  fetch('http://localhost:3000/api/v1/calendar_dates', {
+    'method': 'POST',
+    'headers': {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    'body': JSON.stringify({
+      'date': dataJSON.startDate
+    })
+  })
+  .then( response => {
+    return response.json()
+  })
+  .then( json => {
+    const date = new CalendarDate(json)
+  })
+}
+
+function getDataFromForm(form) {
+  const inputs = form.querySelectorAll('input')
+  const title = inputs[0].value
+  const location = inputs[1].value
+  const startDate = new Date(inputs[2].value)
+  const endDate = new Date(inputs[3].value)
+  const data = {
+    'title': title,
+    'location': location,
+    'startDate': startDate,
+    'endDate': endDate,
+  }
+  return data
+}
+
+function getMonthColors() {
+  const month = calDate.getMonth()
+  const color = ''
+
+  switch (month) {
+    case 0:
+      color = '#cce6ff'
+
+  }
 }
 
 class CalendarDate {
