@@ -206,10 +206,13 @@ function setDateListeners() {
 }
 
 function openDetailView(target) {
-  const div = document.getElementById('date-detail-container')
+  //const div = document.getElementById('date-detail-container')
+
+  const bottomDiv = document.getElementById('new-div')
+
   const detailHTML = makeDetailViewHTML(target)
-  div.appendChild(detailHTML)
-  div.appendChild(document.createElement('hr'))
+  bottomDiv.appendChild(detailHTML)
+  bottomDiv.appendChild(document.createElement('hr'))
 }
 
 function makeDetailViewHTML(target) {
@@ -220,16 +223,16 @@ function makeDetailViewHTML(target) {
   newTaskBtn.innerText = 'New Event'
   setNewListener(div, newTaskBtn, target)
 
-  const backButton = document.createElement('button')
-  backButton.innerText = 'Cancel'
-  backButton.addEventListener('click', (e) => {
-    document.getElementById('date-detail-container').innerHTML = ''
-  })
-
+  // const backButton = document.createElement('button')
+  // backButton.innerText = 'Cancel'
+  // backButton.addEventListener('click', (e) => {
+  //   document.getElementById('new-div').innerHTML = ''
+  // })
   div.appendChild(list)
   div.appendChild(newTaskBtn)
   div.appendChild(document.createElement('br'))
-  div.appendChild(backButton)
+
+  // div.appendChild(backButton)
 
   return div
 }
@@ -240,6 +243,7 @@ function setNewListener(div, newTaskBtn, target) {
   const date = target.querySelector('span').innerText
 
   newTaskBtn.addEventListener('click', (e) => {
+    div.innerHTML = ``
     const form = document.createElement('form')
     form.setAttribute('date', date)
     form.setAttribute('month', calDate.getMonth())
@@ -256,6 +260,15 @@ function setNewListener(div, newTaskBtn, target) {
     calendarDateInput.setAttribute('placeholder', 'calendar_date_id')
     const submitButton = document.createElement('input')
     submitButton.setAttribute("type", "submit")
+
+
+    const backButton = document.createElement('button')
+    backButton.innerText = 'Cancel'
+    backButton.addEventListener('click', (e) => {
+      document.getElementById('new-div').innerHTML = ''
+    })
+
+
     form.appendChild(title)
     form.appendChild(document.createElement('br'))
     form.appendChild(location)
@@ -268,6 +281,7 @@ function setNewListener(div, newTaskBtn, target) {
     form.appendChild(document.createElement('br'))
     startDate.value = new Date()
     form.appendChild(submitButton)
+    form.appendChild(backButton)
     div.appendChild(form)
 
     form.addEventListener('submit', (e) => {
