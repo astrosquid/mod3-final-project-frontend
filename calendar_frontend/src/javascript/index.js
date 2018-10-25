@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then( response => response.json())
     .then( json => json.forEach(eventJSON => new Event(eventJSON)))
 
-  setWeekdaysOnCalendar()
+  CalendarHandler.setWeekdaysOnCalendar()
   CalendarHandler.initCalendar()
   setListenerOnCustomCal(calDateAdapter)
   setListenerOnMonthBtns()
@@ -56,19 +56,6 @@ function setListenerOnCustomCal(calDateAdapter) {
       dateDetailContainer.innerHTML = ''
       openDetailView(event.target, calDateAdapter)
     }
-  })
-}
-
-function setWeekdaysOnCalendar() {
-  const cal = document.getElementById('custom-cal')
-  const dates = document.querySelectorAll('.date')
-  let currentWeekday = 1
-  dates.forEach( (date) => {
-    if (!(currentWeekday - 7 < 1)) {
-      currentWeekday -= 7
-    }
-    date.setAttribute('data-weekday', currentWeekday-1)
-    currentWeekday += 1
   })
 }
 

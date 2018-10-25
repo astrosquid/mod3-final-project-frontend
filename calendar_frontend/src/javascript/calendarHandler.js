@@ -51,4 +51,17 @@ class CalendarHandler {
       }
     })
   }
+
+  static setWeekdaysOnCalendar() {
+    const cal = document.getElementById('custom-cal')
+    const dates = document.querySelectorAll('.date')
+    let currentWeekday = 1
+    dates.forEach( (date) => {
+      if (!(currentWeekday - 7 < 1)) {
+        currentWeekday -= 7
+      }
+      date.setAttribute('data-weekday', currentWeekday-1)
+      currentWeekday += 1
+    })
+  }
 }
