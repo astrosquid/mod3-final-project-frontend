@@ -2,14 +2,18 @@ let calDate = new Date()
 
 document.addEventListener('DOMContentLoaded', () => {
   const calDateAdapter = new Adapter('http://localhost:3000/api/v1/calendar_dates')
-  calDateAdapter.getIndex()
-  .then( response => response.json())
-  .then( json => json.forEach(dateJSON => new CalendarDate(dateJSON) ) )
-  
-  downloadCalendarEvents()
+  calDateAdapter.get()
+    .then( response => response.json())
+    .then( json => json.forEach(dateJSON => new CalendarDate(dateJSON) ) )
+
+  const eventsAdapter = new Adapter('http://localhost:3000/api/v1/events')
+  eventsAdapter.get()
+    .then( response => response.json())
+    .then( json => json.forEach(eventJSON => new Event(eventJSON)))
+
   setWeekdaysOnCalendar()
   CalendarInitializer.initCalendar()
-  setListenerOnCustomCal()
+  setListenerOnCustomCal(calDateAdapter)
   setListenerOnMonthBtns()
 })
 
@@ -29,7 +33,7 @@ function setListenerOnMonthBtns() {
 }
 
 function downloadCalendarDates() {
-  calDateAdapter.getIndex()
+  calDateAdapter.get()
 }
 
 function clearClickedFromDates() {
@@ -39,7 +43,7 @@ function clearClickedFromDates() {
   })
 }
 
-function setListenerOnCustomCal() {
+function setListenerOnCustomCal(calDateAdapter) {
   const cal = document.getElementById('custom-cal')
   cal.addEventListener('click', (event) => {
     if (event.target && event.target.getAttribute('date-square') === 'true') {
@@ -54,7 +58,7 @@ function setListenerOnCustomCal() {
 
       const dateDetailContainer = document.getElementById("date-detail-container")
       dateDetailContainer.innerHTML = ''
-      openDetailView(event.target)
+      openDetailView(event.target, calDateAdapter)
     }
   })
 }
@@ -101,16 +105,6 @@ function setWeekdaysOnCalendar() {
   })
 }
 
-function downloadCalendarEvents() {
-  fetch('http://localhost:3000/api/v1/events')
-  .then( (response) => {
-    return response.json()
-  })
-  .then( (json) => {
-    createLocalEvents(json)
-  })
-}
-
 function createLocalEvents(eventJSONCollection) {
   eventJSONCollection.forEach( (eventJSON) => {
     new Event(eventJSON)
@@ -128,7 +122,7 @@ function setDateListeners() {
   })
 }
 
-function openDetailView(target) {
+function openDetailView(target, calDateAdapter) {
   // make 'cancel' button, which will untoggle the
   // 'shrunk' class on the cal ✅
   // make the button apart of the flex container ✅
@@ -196,13 +190,13 @@ function makeEventCards(events) {
   })
 }
 
-function makeDetailViewHTML(target) {
+function makeDetailViewHTML(target, calDateAdapter) {
   const div = document.createElement('div')
   const list = document.createElement('ul')
 
   const newTaskBtn = document.createElement('button')
   newTaskBtn.innerText = 'New Event'
-  setNewListener(div, newTaskBtn, target)
+  setNewListener(div, newTaskBtn, target, calDateAdapter)
 
   div.appendChild(list)
   div.appendChild(newTaskBtn)
@@ -211,7 +205,7 @@ function makeDetailViewHTML(target) {
   return div
 }
 
-function setNewListener(div, newTaskBtn, target) {
+function setNewListener(div, newTaskBtn, target, calDateAdapter) {
   const list = document.createElement('ul')
 
   const date = target.querySelector('span').innerText
@@ -258,22 +252,17 @@ function setNewListener(div, newTaskBtn, target) {
     form.appendChild(backButton)
     div.appendChild(form)
 
+    const body = {
+      title: title.value,
+      location: location.value,
+      start_date: startDate.value,
+      end_date: endDate.value,
+      calendar_date_id: calendarDateInput.value
+    }
+
     form.addEventListener('submit', (e) => {
       event.preventDefault()
-      fetch('http://localhost:3000/api/v1/calendar_dates/', {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          title: title.value,
-          location: location.value,
-          start_date: startDate.value,
-          end_date: endDate.value,
-          calendar_date_id: calendarDateInput.value
-        })
-      })
+      calDateAdapter.makeNew(body)
       .then(res => res.json())
       .then(json => {console.log(json)})
       .then(function() {
