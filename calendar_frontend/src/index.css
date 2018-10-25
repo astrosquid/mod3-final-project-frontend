@@ -22,6 +22,11 @@ div#titlebar {
   color: white;
 }
 
+#app-container {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
 .change-month {
   background: none;
 	color: white;
@@ -57,8 +62,8 @@ div#cal-controls {
 }
 
 .cal-control {
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 5em;
+  margin-right: 5em;
 }
 
 div#custom-cal {
@@ -66,8 +71,10 @@ div#custom-cal {
   flex-wrap: wrap;
   align-items: center;
   flex-direction: row;
-  margin: auto;
+  width: 100%;
+  /* margin: auto; */
   justify-content:center;
+  padding-bottom: 2em;
 }
 
 div.col {
@@ -93,6 +100,11 @@ div.in-month {
   to {background-color: rgb(255,255,255,0.9);}
 }
 
+@keyframes color_change_number {
+  from {color: rgb(255,255,255,0.9);}
+  to {color: rgb(10,10,10,0.9);}
+}
+
 div.in-month:hover {
   background-color: rgb(255,255,255,1);
   border-radius: 0%;
@@ -115,5 +127,35 @@ div.date-num {
 
 .clicked {
   animation: color_change 0.7s infinite alternate;
-  height: 0px;
+}
+
+.clicked > .date-num > span {
+  animation: color_change_number 0.7s infinite alternate;
+}
+
+.shrunk > .date {
+  height: auto;
+}
+
+#date-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items:flex-start;
+  flex-direction: row;
+  /* margin: auto; */
+  justify-content:center;
+}
+
+div.event-card {
+  max-width: 12%;
+  /* height: 50px; */
+  background-color: white;
+  margin: 1em;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+div.event-card > p {
+  padding-left: 1em;
+  padding-right: 1em;
 }

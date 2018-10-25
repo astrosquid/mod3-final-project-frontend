@@ -68,6 +68,13 @@ function setListenerOnCustomCal() {
     if (event.target && event.target.getAttribute('date-square') === 'true') {
       clearClickedFromDates()
       event.target.className += ' clicked'
+      const calendarDate = getDateFromElement(event.target)
+
+      // shrink calendar if there are events on this date
+      if (calendarDate && calendarDate.getEvents().length > 0) {
+        cal.classList.toggle('shrunk')
+      }
+
       const dateDetailContainer = document.getElementById("date-detail-container")
       dateDetailContainer.innerHTML = ''
       openDetailView(event.target)
@@ -198,6 +205,11 @@ function setDateListeners() {
 }
 
 function openDetailView(target) {
+  // make 'cancel' button, which will untoggle the
+  // 'shrunk' class on the cal
+  // make the button apart of the flex container
+  // make 'new event' button
+  // make the button apart of the flex container
   const div = document.getElementById('date-detail-container')
   const date = getDateFromElement(target)
   const detailHTML = makeDetailViewHTML(target)
@@ -210,11 +222,34 @@ function getDateFromElement(target) {
   const month = calDate.getMonth()
   const year = calDate.getFullYear()
   const date = new Date(year, month, day)
-  const calendarDate = CalendarDate.findByDate(date)
-  debugger
+  return CalendarDate.findByDate(date)
+}
+
+function makeCardsFromCalDate(calendarDate) {
   const dateEvents = Event.getEventsByCalDate(calendarDate)
-  debugger
   // go make HTML cards for these events.
+  const cards = makeEventCards(dateEvents)
+  const div = document.getElementById('date-detail-container')
+  // debugger
+  cards.forEach( (card) => {
+    div.appendChild(card)
+  })
+}
+
+function makeEventCards(events) {
+  return events.map( (event) => {
+    const card = document.createElement('div')
+    card.className = 'event-card'
+    const title = document.createElement('p')
+    const strong = document.createElement('strong')
+    strong.innerText = event.title
+    title.appendChild(strong)
+    card.appendChild(title)
+    const location = document.createElement('p')
+    location.innerText = event.location
+    card.appendChild(location)
+    return card
+  })
 }
 
 function makeDetailViewHTML(target) {
@@ -225,16 +260,9 @@ function makeDetailViewHTML(target) {
   newTaskBtn.innerText = 'New Event'
   setNewListener(div, newTaskBtn, target)
 
-  // const backButton = document.createElement('button')
-  // backButton.innerText = 'Cancel'
-  // backButton.addEventListener('click', (e) => {
-  //   document.getElementById('new-div').innerHTML = ''
-  // })
   div.appendChild(list)
   div.appendChild(newTaskBtn)
   div.appendChild(document.createElement('br'))
-
-  // div.appendChild(backButton)
 
   return div
 }
@@ -267,7 +295,7 @@ function setNewListener(div, newTaskBtn, target) {
     const backButton = document.createElement('button')
     backButton.innerText = 'Cancel'
     backButton.addEventListener('click', (e) => {
-      document.getElementById('new-div').innerHTML = ''
+      document.getElementById('date-detail-container').innerHTML = ''
     })
 
 
@@ -334,13 +362,19 @@ class CalendarDate {
 
   static findByDate(date) {
     return calendarDates.filter( (calDate) => {
-      debugger
+
       if (calDate.date.getFullYear() === date.getFullYear() &&
         calDate.date.getMonth() === date.getMonth() &&
         calDate.date.getDate() === date.getDate()) {
           return calDate
         }
     })[0]
+  }
+
+  getEvents() {
+    return events.filter( (event) => {
+      return event.calendarDateId === this.id
+    })
   }
 }
 
@@ -357,7 +391,7 @@ class Event {
 
   static getEventsByCalDate(calDate) {
     return events.filter( (event) => {
-      debugger
+
       return event.calendarDateId === calDate.id
     })
   }
