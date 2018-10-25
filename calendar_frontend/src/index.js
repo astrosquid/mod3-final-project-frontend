@@ -111,6 +111,9 @@ function populateCalendarWithDays() {
       date.className = 'col date in-month'
       date.appendChild(numDiv)
       date.setAttribute('date-square', 'true')
+
+      // set count of events on that day within square
+      const calendarDate = getDateFromElement(date)
       currentDate += 1
     }
   })
@@ -206,25 +209,26 @@ function setDateListeners() {
 
 function openDetailView(target) {
   // make 'cancel' button, which will untoggle the
-  // 'shrunk' class on the cal
-  // make the button apart of the flex container
+  // 'shrunk' class on the cal ✅
+  // make the button apart of the flex container ✅
   // make 'new event' button
   // make the button apart of the flex container
   const detail = document.getElementById('date-detail-container')
-  makeDetailCloseBtn(detail)
-  return
+  makeDetailCloseBtn(detail, target)
   const date = getDateFromElement(target)
+  return
   const detailHTML = makeDetailViewHTML(target)
   detail.appendChild(detailHTML)
 }
 
-function makeDetailCloseBtn(element) {
+function makeDetailCloseBtn(element, dateSquare) {
   const closeBtn = document.createElement('div')
   closeBtn.classList.add('detail-item')
   closeBtn.id = 'close-btn'
   closeBtn.innerText = '[Close]'
   closeBtn.addEventListener('click', (event) => {
     closeDetailView()
+    dateSquare.classList.remove('clicked') // stop blinking on cal
   })
   element.appendChild(closeBtn)
 }
