@@ -1,7 +1,11 @@
 let calDate = new Date()
 
 document.addEventListener('DOMContentLoaded', () => {
-  downloadCalendarDates()
+  const calDateAdapter = new Adapter('http://localhost:3000/api/v1/calendar_dates')
+  calDateAdapter.getIndex()
+  .then( response => response.json())
+  .then( json => json.forEach(dateJSON => new CalendarDate(dateJSON) ) )
+  
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
   CalendarInitializer.initCalendar()
@@ -25,15 +29,7 @@ function setListenerOnMonthBtns() {
 }
 
 function downloadCalendarDates() {
-  fetch('http://localhost:3000/api/v1/calendar_dates')
-  .then( response => response.json())
-  .then( json => {
-    console.log('%c CalDates from server:', 'color: yellow')
-    console.log(json)
-    json.forEach(dateJSON => {
-      new CalendarDate(dateJSON)
-    })
-  })
+  calDateAdapter.getIndex()
 }
 
 function clearClickedFromDates() {
