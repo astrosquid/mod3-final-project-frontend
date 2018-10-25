@@ -210,11 +210,30 @@ function openDetailView(target) {
   // make the button apart of the flex container
   // make 'new event' button
   // make the button apart of the flex container
-  const div = document.getElementById('date-detail-container')
+  const detail = document.getElementById('date-detail-container')
+  makeDetailCloseBtn(detail)
+  return
   const date = getDateFromElement(target)
   const detailHTML = makeDetailViewHTML(target)
-  div.appendChild(detailHTML)
-  div.appendChild(document.createElement('hr'))
+  detail.appendChild(detailHTML)
+}
+
+function makeDetailCloseBtn(element) {
+  const closeBtn = document.createElement('div')
+  closeBtn.classList.add('detail-item')
+  closeBtn.id = 'close-btn'
+  closeBtn.innerText = '[Close]'
+  closeBtn.addEventListener('click', (event) => {
+    closeDetailView()
+  })
+  element.appendChild(closeBtn)
+}
+
+function closeDetailView() {
+  const detail = document.getElementById('date-detail-container')
+  detail.innerHTML = ''
+  const cal = document.getElementById('custom-cal')
+  cal.classList.remove('shrunk')
 }
 
 function getDateFromElement(target) {
