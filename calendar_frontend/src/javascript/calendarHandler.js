@@ -64,4 +64,12 @@ class CalendarHandler {
       currentWeekday += 1
     })
   }
+
+  static clearClickedFromDates() {
+    const dates = document.querySelectorAll('.in-month')
+    dates.forEach( (date) => {
+      date.className = 'col date in-month'
+    })
+  }
+
 }
