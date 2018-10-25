@@ -72,7 +72,7 @@ function setListenerOnCustomCal() {
 
       // shrink calendar if there are events on this date
       if (calendarDate && calendarDate.getEvents().length > 0) {
-        cal.classList.toggle('shrunk')
+        cal.classList.add('shrunk')
       }
 
       const dateDetailContainer = document.getElementById("date-detail-container")
