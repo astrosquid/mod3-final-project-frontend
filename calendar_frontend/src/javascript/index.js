@@ -1,5 +1,4 @@
 let calendarDates = []
-let events = []
 
 let calDate = new Date()
 
@@ -7,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   downloadCalendarDates()
   downloadCalendarEvents()
   setWeekdaysOnCalendar()
-  initCalendar()
+  CalendarInitializer.initCalendar()
   setListenerOnCustomCal()
   setListenerOnMonthBtns()
 })
@@ -24,22 +23,6 @@ function setListenerOnMonthBtns() {
   nextMonthBtn.addEventListener('click', (e) => {
     calDate.setMonth(calDate.getMonth() + 1)
     initCalendar()
-  })
-}
-
-function initCalendar() {
-  document.getElementById('month-label').innerText = `${getMonthByNum(calDate.getMonth())}, ${calDate.getFullYear()}`
-  const cal = document.getElementById('custom-cal')
-  cal.className = getMonthByNum(calDate.getMonth())
-  removeDateNums()
-  resetCalendarAttributes()
-  populateCalendarWithDays()
-}
-
-function removeDateNums() {
-  const dateNums = document.querySelectorAll('.date-num')
-  dateNums.forEach( (dateNum) => {
-    dateNum.remove()
   })
 }
 
@@ -80,62 +63,6 @@ function setListenerOnCustomCal() {
       openDetailView(event.target)
     }
   })
-}
-
-function resetCalendarAttributes() {
-  const dates = document.querySelectorAll('.date')
-  dates.forEach( (date) => {
-    date.removeAttribute('date-square')
-    date.className = 'col date'
-  })
-}
-
-function populateCalendarWithDays() {
-  const firstDay = new Date(calDate.getFullYear(), calDate.getMonth(), 1) // between 0 and 6
-  const lastDay = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 0)
-  let currentDate = firstDay.getDate()
-  const dates = document.querySelectorAll('.date')
-  let foundFirstDayOfMonth = false
-  dates.forEach( (date) => {
-    if (parseInt(date.getAttribute('data-weekday')) === firstDay.getDay()) {
-      foundFirstDayOfMonth = true
-    }
-
-    if (foundFirstDayOfMonth && currentDate <= lastDay.getDate()) {
-      const numDiv = document.createElement('div')
-      numDiv.setAttribute('date-num', currentDate)
-      numDiv.className = 'date-num'
-      const span = document.createElement('span')
-      span.innerText = currentDate
-      numDiv.appendChild(span)
-      date.className = 'col date in-month'
-      date.appendChild(numDiv)
-      date.setAttribute('date-square', 'true')
-
-      // set count of events on that day within square
-      const calendarDate = getDateFromElement(date)
-      currentDate += 1
-    }
-  })
-}
-
-function getWeekdayFromNumber(attributeNumber) {
-  switch (attributeNumber) {
-    case 0:
-      return 'Sunday'
-    case 1:
-      return 'Monday'
-    case 2:
-      return 'Tuesday'
-    case 3:
-      return 'Wednesday'
-    case 4:
-      return 'Thursday'
-    case 5:
-      return 'Friday'
-    case 6:
-      return 'Saturday'
-  }
 }
 
 function getMonthByNum(monthNum) {
@@ -401,21 +328,57 @@ class CalendarDate {
   }
 }
 
-class Event {
-  constructor(eventJSON) {
-    this.id = eventJSON.id
-    this.title = eventJSON.title
-    this.location = eventJSON.location
-    this.calendarDateId = eventJSON.calendar_date_id
-    this.calendarDate = CalendarDate.findById(this.calendarDateId)
-    events.push(this)
-    return this
+class CalendarInitializer {
+  static initCalendar() {
+    document.getElementById('month-label').innerText = `${getMonthByNum(calDate.getMonth())}, ${calDate.getFullYear()}`
+    const cal = document.getElementById('custom-cal')
+    cal.className = getMonthByNum(calDate.getMonth())
+    this.removeDateNums()
+    this.resetCalendarAttributes()
+    this.populateCalendarWithDays()
   }
 
-  static getEventsByCalDate(calDate) {
-    return events.filter( (event) => {
+  static removeDateNums() {
+    const dateNums = document.querySelectorAll('.date-num')
+    dateNums.forEach( (dateNum) => {
+      dateNum.remove()
+    })
+  }
 
-      return event.calendarDateId === calDate.id
+  static resetCalendarAttributes() {
+    const dates = document.querySelectorAll('.date')
+    dates.forEach( (date) => {
+      date.removeAttribute('date-square')
+      date.className = 'col date'
+    })
+  }
+
+  static populateCalendarWithDays() {
+    const firstDay = new Date(calDate.getFullYear(), calDate.getMonth(), 1) // between 0 and 6
+    const lastDay = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 0)
+    let currentDate = firstDay.getDate()
+    const dates = document.querySelectorAll('.date')
+    let foundFirstDayOfMonth = false
+    dates.forEach( (date) => {
+      if (parseInt(date.getAttribute('data-weekday')) === firstDay.getDay()) {
+        foundFirstDayOfMonth = true
+      }
+
+      if (foundFirstDayOfMonth && currentDate <= lastDay.getDate()) {
+        const numDiv = document.createElement('div')
+        numDiv.setAttribute('date-num', currentDate)
+        numDiv.className = 'date-num'
+        const span = document.createElement('span')
+        span.innerText = currentDate
+        numDiv.appendChild(span)
+        date.className = 'col date in-month'
+        date.appendChild(numDiv)
+        date.setAttribute('date-square', 'true')
+
+        // set count of events on that day within square
+        const calendarDate = getDateFromElement(date)
+        currentDate += 1
+      }
     })
   }
 }
