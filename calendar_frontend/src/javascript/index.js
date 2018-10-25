@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then( json => json.forEach(eventJSON => new Event(eventJSON)))
 
   setWeekdaysOnCalendar()
-  CalendarInitializer.initCalendar()
+  CalendarHandler.initCalendar()
   setListenerOnCustomCal(calDateAdapter)
   setListenerOnMonthBtns()
 })
@@ -30,10 +30,6 @@ function setListenerOnMonthBtns() {
     calDate.setMonth(calDate.getMonth() + 1)
     initCalendar()
   })
-}
-
-function downloadCalendarDates() {
-  calDateAdapter.get()
 }
 
 function clearClickedFromDates() {
@@ -63,35 +59,6 @@ function setListenerOnCustomCal(calDateAdapter) {
   })
 }
 
-function getMonthByNum(monthNum) {
-  switch (monthNum) {
-    case 0:
-      return 'January'
-    case 1:
-      return 'February'
-    case 2:
-      return 'March'
-    case 3:
-      return 'April'
-    case 4:
-      return 'May'
-    case 5:
-      return 'June'
-    case 6:
-      return 'July'
-    case 7:
-      return 'August'
-    case 8:
-      return 'September'
-    case 9:
-      return 'October'
-    case 10:
-      return 'November'
-    case 11:
-      return 'December'
-  }
-}
-
 function setWeekdaysOnCalendar() {
   const cal = document.getElementById('custom-cal')
   const dates = document.querySelectorAll('.date')
@@ -102,12 +69,6 @@ function setWeekdaysOnCalendar() {
     }
     date.setAttribute('data-weekday', currentWeekday-1)
     currentWeekday += 1
-  })
-}
-
-function createLocalEvents(eventJSONCollection) {
-  eventJSONCollection.forEach( (eventJSON) => {
-    new Event(eventJSON)
   })
 }
 
@@ -123,9 +84,6 @@ function setDateListeners() {
 }
 
 function openDetailView(target, calDateAdapter) {
-  // make 'cancel' button, which will untoggle the
-  // 'shrunk' class on the cal ✅
-  // make the button apart of the flex container ✅
   // make 'new event' button
   // make the button apart of the flex container
   const detail = document.getElementById('date-detail-container')
@@ -274,7 +232,7 @@ function setNewListener(div, newTaskBtn, target, calDateAdapter) {
   })
 }
 
-class CalendarInitializer {
+class CalendarHandler {
   static initCalendar() {
     document.getElementById('month-label').innerText = `${getMonthByNum(calDate.getMonth())}, ${calDate.getFullYear()}`
     const cal = document.getElementById('custom-cal')
