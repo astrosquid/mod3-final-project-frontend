@@ -29,6 +29,14 @@ class CalendarDate {
     })[0]
   }
 
+  static getDateFromElement(dateSquare) {
+    const day = parseInt(dateSquare.querySelector('span').innerText)
+    const month = calDate.getMonth()
+    const year = calDate.getFullYear()
+    const date = new Date(year, month, day)
+    return CalendarDate.findByDate(date)
+  }
+
   getEvents() {
     return events.filter( (event) => {
       return event.calendarDateId === this.id

@@ -85,7 +85,7 @@ function setListenerOnCustomCal(calDateAdapter) {
     if (event.target && event.target.getAttribute('date-square') === 'true') {
       CalendarHandler.clearClickedFromDates()
       event.target.className += ' clicked'
-      const calendarDate = getDateFromElement(event.target)
+      const calendarDate = CalendarDate.getDateFromElement(event.target)
 
       // shrink calendar if there are events on this date
       if (calendarDate && calendarDate.getEvents().length > 0) {
@@ -105,11 +105,38 @@ function setListenerOnMonthBtns() {
 
   prevMonthBtn.addEventListener('click', (e) => {
     calDate.setMonth(calDate.getMonth() - 1)
-    initCalendar()
+    CalendarHandler.initCalendar()
   })
 
   nextMonthBtn.addEventListener('click', (e) => {
     calDate.setMonth(calDate.getMonth() + 1)
-    initCalendar()
+    CalendarHandler.initCalendar()
+  })
+}
+
+function setSubmitListener() {
+  const submit = document.getElementById('new-form-submit')
+  submit.addEventListener('click', (event) => {
+    event.preventDefault()
+    const form = document.getElementById('new-event-form')
+    const day = form.getAttribute('data-day')
+    const month = form.getAttribute('data-month')
+    const year = form.getAttribute('data-year')
+    const date = new Date(year, month, day)
+    const calAdapter = new Adapter('http://localhost:3000/api/v1/calendar_dates')
+    calAdapter.new({ date })
+    .then( res => res.json() )
+    .then( json => {
+      console.log(json)
+      const eventAdapter = new Adapter('http://localhost:3000/api/v1/events')
+      const title = document.getElementById('title-input')
+      const location = document.getElementById('location-input')
+      eventAdapter.new({ title: title.value, location: location.value, calendar_date_id: json.id})
+      .then( res => res.json() )
+      .then( eventJSON => {
+        console.log(eventJSON)
+        form.remove()
+      })
+    })
   })
 }

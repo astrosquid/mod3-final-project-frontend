@@ -79,7 +79,7 @@ div#custom-cal {
 
 div.col {
   width: 13%;
-  height: 125px;
+  height: 85px;
   margin: 3px;
 }
 
@@ -112,7 +112,7 @@ div.in-month:hover {
   cursor: pointer;
 }
 
-div.in-month:hover .date-num {
+div.in-month:hover > div > span {
   color: black;
 }
 
@@ -130,7 +130,7 @@ div.date-num {
   animation: color_change 0.7s infinite alternate;
 }
 
-.clicked > .date-num > span {
+.clicked > div > span {
   animation: color_change_number 0.7s infinite alternate;
 }
 
@@ -149,14 +149,15 @@ div.date-num {
 
 .detail-item {
   max-width: 12%;
-  width: 100px;
-  padding: 1em 0 1em 0;
+  /* width: 100px; */
+  padding: 1em;
   cursor: pointer;
+  background-color: white;
+  color: black;
+  margin-right: 1em;
 }
 
-#close-btn {
-  background-color: black;
-  color: white;
+div.btn.detail-item {
   font-size: 1.5em;
   text-align: center;
 }
@@ -173,4 +174,23 @@ div.event-card {
 div.event-card > p {
   padding-left: 1em;
   padding-right: 1em;
+}
+
+#new-event-form {
+  background-color: white;
+  max-width: 40%;
+  cursor: unset;
+}
+
+.event-count {
+  text-align: center;
+  display: inline-block;
+}
+
+.event-count > span {
+  border: 1px solid white;
+  /* border-radius: 200%; */
+  color: white;
+  font-size: 0.9em;
+  padding: 0 0.5em 0 0.5em;
 }

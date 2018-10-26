@@ -1,22 +1,19 @@
-function makeDetailViewHTML(target, calDateAdapter) {
-  const div = document.createElement('div')
-  const list = document.createElement('ul')
+function makeDetailViewHTML(target) {
+  const calDateId = parseInt(target.getAttribute('cal-date-id'))
+  const calendarDate = CalendarDate.findById(calDateId)
+  const events = calendarDate.getEvents()
+  eventsHTML = makeEventCards(events)
 
-  const newTaskBtn = document.createElement('button')
-  newTaskBtn.innerText = 'New Event'
-  setNewListener(div, newTaskBtn, target, calDateAdapter)
-
-  div.appendChild(list)
-  div.appendChild(newTaskBtn)
-  div.appendChild(document.createElement('br'))
-
-  return div
+  const container = document.getElementById('date-detail-container')
+  eventsHTML.forEach( (eventHTML) => {
+    container.appendChild(eventHTML)
+  })
 }
 
 function makeEventCards(events) {
   return events.map( (event) => {
     const card = document.createElement('div')
-    card.className = 'event-card'
+    card.className = 'detail-item'
     const title = document.createElement('p')
     const strong = document.createElement('strong')
     strong.innerText = event.title
@@ -39,6 +36,7 @@ function closeDetailView() {
 function makeDetailCloseBtn(element, dateSquare) {
   const closeBtn = document.createElement('div')
   closeBtn.classList.add('detail-item')
+  closeBtn.classList.add('btn')
   closeBtn.id = 'close-btn'
   closeBtn.innerText = '[Close]'
   closeBtn.addEventListener('click', (event) => {
@@ -48,13 +46,57 @@ function makeDetailCloseBtn(element, dateSquare) {
   element.appendChild(closeBtn)
 }
 
+function makeDetailNewBtn(element, dateSquare) {
+  const newBtn = document.createElement('div')
+  newBtn.classList.add('detail-item')
+  newBtn.classList.add('btn')
+  newBtn.id = 'new-btn'
+  newBtn.innerText = '[New]'
+  newBtn.addEventListener('click', (event) => {
+    openNewEventForm(dateSquare)
+  })
+  element.appendChild(newBtn)
+}
+
+function openNewEventForm(dateSquare) {
+  const dom = new DOMController()
+  const form = document.createElement('form')
+  form.id = 'new-event-form'
+  form.className = 'detail-item'
+
+  const day = dom.getDateFromSquareSpan(dateSquare)
+  const month = calDate.getMonth()
+  const year = calDate.getFullYear()
+  form.setAttribute('data-day', day)
+  form.setAttribute('data-month', month)
+  form.setAttribute('data-year', year)
+
+  const titleField = document.createElement('input')
+  titleField.id = 'title-input'
+  titleField.placeholder = 'What...'
+  const locationField = document.createElement('input')
+  locationField.id = 'location-input'
+  locationField.placeholder = 'Where...'
+
+  const submit = document.createElement('input')
+  submit.type = 'submit'
+  submit.id = 'new-form-submit'
+
+
+  form.appendChild(titleField)
+  form.appendChild(locationField)
+  form.appendChild(submit)
+
+  dom.dateDetailContainer.appendChild(form)
+  setSubmitListener()
+}
+
 function openDetailView(target, calDateAdapter) {
-  // make 'new event' button
-  // make the button apart of the flex container
   const detail = document.getElementById('date-detail-container')
   makeDetailCloseBtn(detail, target)
-  const date = getDateFromElement(target)
+  makeDetailNewBtn(detail, target)
+  const date = CalendarDate.getDateFromElement(target)
+  makeDetailViewHTML(target)
   return
-  const detailHTML = makeDetailViewHTML(target)
-  detail.appendChild(detailHTML)
+  // detail.appendChild(detailHTML)
 }

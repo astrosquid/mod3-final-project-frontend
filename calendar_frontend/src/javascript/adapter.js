@@ -18,12 +18,4 @@ class Adapter {
       body: JSON.stringify(requestBody)
     })
   }
-
-  update(requestBody, id) {
-    return fetch(`${this.endpoint}/${id}`, {
-      method: 'PATCH',
-      headers: this.headers,
-      body: JSON.stringify(requestBody)
-    })
-  }
 }

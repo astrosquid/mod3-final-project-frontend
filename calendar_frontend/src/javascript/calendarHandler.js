@@ -1,9 +1,12 @@
+let calDate = new Date()
+
 class CalendarHandler {
   static initCalendar() {
     document.getElementById('month-label').innerText = `${getMonthByNum(calDate.getMonth())}, ${calDate.getFullYear()}`
     const cal = document.getElementById('custom-cal')
     cal.className = getMonthByNum(calDate.getMonth())
     this.removeDateNums()
+    this.removeEventDivs()
     this.resetCalendarAttributes()
     this.populateCalendarWithDays()
   }
@@ -12,6 +15,13 @@ class CalendarHandler {
     const dateNums = document.querySelectorAll('.date-num')
     dateNums.forEach( (dateNum) => {
       dateNum.remove()
+    })
+  }
+
+  static removeEventDivs() {
+    const eventDivs = document.querySelectorAll('.event-count')
+    eventDivs.forEach( (eventDiv) => {
+      eventDiv.remove()
     })
   }
 
@@ -45,8 +55,20 @@ class CalendarHandler {
         date.appendChild(numDiv)
         date.setAttribute('date-square', 'true')
 
+        const calendarDate = CalendarDate.findByDate(new Date(calDate.getFullYear(), calDate.getMonth(), currentDate))
+        const calDateId = calendarDate ? calendarDate.id : null
+        date.setAttribute('cal-date-id', calDateId)
+
         // set count of events on that day within square
-        const calendarDate = getDateFromElement(date)
+        if (calendarDate && calendarDate.getEvents()) {
+          const countDiv = document.createElement('div')
+          const countSpan = document.createElement('span')
+          countDiv.className = 'event-count'
+          countSpan.innerText = calendarDate.getEvents().length + " events"
+          countDiv.appendChild(countSpan)
+          date.appendChild(countDiv)
+        }
+
         currentDate += 1
       }
     })
@@ -72,4 +94,14 @@ class CalendarHandler {
     })
   }
 
+  static makeCardsFromCalDate(calendarDate) {
+    const dateEvents = Event.getEventsByCalDate(calendarDate)
+    // go make HTML cards for these events.
+    const cards = makeEventCards(dateEvents)
+    const div = document.getElementById('date-detail-container')
+    // debugger
+    cards.forEach( (card) => {
+      div.appendChild(card)
+    })
+  }
 }
