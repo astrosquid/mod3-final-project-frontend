@@ -104,4 +104,12 @@ class CalendarHandler {
       div.appendChild(card)
     })
   }
+
+  static getSquareFromDate(jsDate) {
+    const dom = new DOMController()
+    return Array.from(dom.datesInMonth()).filter( (dateSquare) => {
+      const span = dateSquare.querySelector('span')
+      return parseInt(span.innerText) === jsDate.getDate()
+    })[0]
+  }
 }

@@ -1,13 +1,14 @@
 function makeDetailViewHTML(target) {
   const calDateId = parseInt(target.getAttribute('cal-date-id'))
   const calendarDate = CalendarDate.findById(calDateId)
-  const events = calendarDate.getEvents()
-  eventsHTML = makeEventCards(events)
-
-  const container = document.getElementById('date-detail-container')
-  eventsHTML.forEach( (eventHTML) => {
-    container.appendChild(eventHTML)
-  })
+  if (calendarDate) {
+    const events = calendarDate.getEvents()
+    eventsHTML = makeEventCards(events)
+    const container = document.getElementById('date-detail-container')
+    eventsHTML.forEach( (eventHTML) => {
+      container.appendChild(eventHTML)
+    })
+  }
 }
 
 function makeEventCards(events) {
@@ -91,7 +92,7 @@ function openNewEventForm(dateSquare) {
   setSubmitListener()
 }
 
-function openDetailView(target, calDateAdapter) {
+function openDetailView(target) {
   const detail = document.getElementById('date-detail-container')
   makeDetailCloseBtn(detail, target)
   makeDetailNewBtn(detail, target)

@@ -7,7 +7,7 @@ class DOMController {
   }
 
   datesInMonth() {
-    return this.calendar.getElementByClassName('in-month')
+    return this.calendar.getElementsByClassName('in-month')
   }
 
   getDateFromSquareSpan(dateSquare) {
